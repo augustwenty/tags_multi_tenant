@@ -2,7 +2,8 @@ defmodule Tags_Multi_Tenant.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :taglet,
+    [app: :tags_multi_tenant,
+     name: "Tags_Multi_Tenant",
      version: "0.1.0",
      elixir: "~> 1.10",
      build_embedded: Mix.env == :prod,
@@ -10,9 +11,6 @@ defmodule Tags_Multi_Tenant.Mixfile do
      elixirc_paths: elixirc_paths(Mix.env),
      package: package(),
      deps: deps(),
-
-     # Docs
-     name: "Tags_Multi_Tenant",
      description: description(),
      source_url: "https://github.com/augustwenty/tags_multi_tenant",
      docs: [main: "Tags_Multi_Tenant", extras: ["README.md"]]
@@ -47,10 +45,8 @@ defmodule Tags_Multi_Tenant.Mixfile do
 
   defp package do
     [
-      name: :taglet,
-      files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["ddaugher"],
-      licenses: ["Apache License 2.0"],
+      licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/augustwenty/tags_multi_tenant",
         "Docs" => "https://hexdocs.pm/tags_multi_tenant/TagsMultiTenant.html"
