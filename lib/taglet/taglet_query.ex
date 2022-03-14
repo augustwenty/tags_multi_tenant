@@ -3,7 +3,7 @@ defmodule Tags_Multi_Tenant.Tags_Multi_TenantQuery do
   alias Tags_Multi_Tenant.{Tagging, Tag}
 
   @moduledoc """
-  Allow to build essential ecto queries for taglet
+  Allow to build essential ecto queries for tags_multi_tenant
 
   All this functions only should be used from Tags_Multi_Tenant module
   """

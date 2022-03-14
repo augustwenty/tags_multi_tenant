@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :taglet, key: :value
+#     config :tags_multi_tenant, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:taglet, :key)
+#     Application.get_env(:tags_multi_tenant, :key)
 #
 # Or configure a 3rd-party app:
 #

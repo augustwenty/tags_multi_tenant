@@ -1,5 +1,5 @@
 defmodule Mix.Tasks.Tags_Multi_Tenant.Install do
-  @shortdoc "generates taglet migration file for the database"
+  @shortdoc "generates tags_multi_tenant migration file for the database"
 
   use Mix.Task
   import Mix.Generator
@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Tags_Multi_Tenant.Install do
     path = Path.relative_to("priv/repo/migrations", Mix.Project.app_path)
     tag_file = Path.join(path, "#{timestamp()}_create_tag.exs")
     tagging_file = Path.join(path, "#{timestamp()}_create_tagging.exs")
-    taggable_id_type = Application.get_env(:taglet, :taggable_id, :integer)
+    taggable_id_type = Application.get_env(:tags_multi_tenant, :taggable_id, :integer)
     create_directory path
 
     create_file tag_file, """

@@ -311,7 +311,7 @@ defmodule Tags_Multi_TenantTest do
 
   # Aux functions
   defp setup_tenant do
-    migrations_path = Application.app_dir(:taglet, ["priv", "repo", "migrations"])
+    migrations_path = Application.app_dir(:tags_multi_tenant, ["priv", "repo", "migrations"])
 
     # Drop the previous tenant to reset the data
     SQL.query(@repo, "DROP SCHEMA \"#{@tenant_id}\" CASCADE", [])

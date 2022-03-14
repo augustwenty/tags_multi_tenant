@@ -5,7 +5,7 @@ machine:
 
 database:
   override:
-    - createdb taglet_test
+    - createdb tags_multi_tenant_test
 
 dependencies:
   cache_directories:

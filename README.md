@@ -1,6 +1,6 @@
 # Tags_Multi_Tenant
 
-[![CircleCI](https://circleci.com/gh/bizneo/taglet/tree/master.svg?style=svg)](https://circleci.com/gh/bizneo/taglet/tree/master)
+[![CircleCI](https://circleci.com/gh/bizneo/tags_multi_tenant/tree/master.svg?style=svg)](https://circleci.com/gh/bizneo/tags_multi_tenant/tree/master)
 
 Tags_Multi_Tenant allows you to manage tags associated to your records.
 
@@ -8,11 +8,11 @@ It also allows you to specify various contexts
 
 ## Installation
 
-  1. Add `taglet` to your list of dependencies in `mix.exs`:
+  1. Add `tags_multi_tenant` to your list of dependencies in `mix.exs`:
 
   ```elixir
   def deps do
-    [{:taglet, "~> 0.6.0"}]
+    [{:tags_multi_tenant, "~> 0.6.0"}]
   end
   ```
 
@@ -22,7 +22,7 @@ It also allows you to specify various contexts
   # Options
   # taggable_id - This field is default :integer, but you can set it as :uuid
 
-  config :taglet,
+  config :tags_multi_tenant,
     repo: ApplicationName.Repo,
     taggable_id: :uuid
   ```
@@ -33,7 +33,7 @@ It also allows you to specify various contexts
 
   4. Generate the migrations:
 
-  ```mix taglet.install```
+  ```mix tags_multi_tenant.install```
 
   5. Run the migrations:
 
@@ -115,16 +115,16 @@ concatenate ecto queries and return the query.
 
 If you want you can use directly a set of functions to play with tags:
 
-[`Tags_Multi_Tenant.add/4`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#add/4)
+[`Tags_Multi_Tenant.add/4`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#add/4)
 
-[`Tags_Multi_Tenant.remove/4`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#remove/4)
+[`Tags_Multi_Tenant.remove/4`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#remove/4)
 
-[`Tags_Multi_Tenant.rename/5`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#rename/5)
+[`Tags_Multi_Tenant.rename/5`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#rename/5)
 
-[`Tags_Multi_Tenant.tag_list/3`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#tag_list/3)
+[`Tags_Multi_Tenant.tag_list/3`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#tag_list/3)
 
-[`Tags_Multi_Tenant.tag_list_queryable/2`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#tag_list_queryable/2)
+[`Tags_Multi_Tenant.tag_list_queryable/2`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#tag_list_queryable/2)
 
-[`Tags_Multi_Tenant.tagged_with/4`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#tagged_with/4)
+[`Tags_Multi_Tenant.tagged_with/4`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#tagged_with/4)
 
-[`Tags_Multi_Tenant.tagged_with_query/3`](https://hexdocs.pm/taglet/Tags_Multi_Tenant.html#tagged_with_query/3)
+[`Tags_Multi_Tenant.tagged_with_query/3`](https://hexdocs.pm/tags_multi_tenant/Tags_Multi_Tenant.html#tagged_with_query/3)
