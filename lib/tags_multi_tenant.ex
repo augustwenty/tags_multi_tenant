@@ -1,10 +1,10 @@
-defmodule Tags_Multi_Tenant do
-  alias Tags_Multi_Tenant.{Tagging, Tag, Tags_Multi_TenantQuery}
-  import Tags_Multi_Tenant.RepoClient
+defmodule TagsMultiTenant do
+  alias TagsMultiTenant.{Tagging, Tag, TagsMultiTenantQuery}
+  import TagsMultiTenant.RepoClient
 
   @moduledoc """
-  Documentation for Tags_Multi_Tenant.
-  Tags_Multi_Tenant allows you to manage tags associated to your records.
+  Documentation for TagsMultiTenant.
+  TagsMultiTenant allows you to manage tags associated to your records.
 
   Please read README.md to get more info about how to use that
   package.
@@ -80,7 +80,7 @@ defmodule Tags_Multi_Tenant do
     case tag in tag_list do
       true ->
         struct
-        |> Tags_Multi_TenantQuery.get_tags_association(get_or_create(tag, opts), context)
+        |> TagsMultiTenantQuery.get_tags_association(get_or_create(tag, opts), context)
         |> repo().delete_all(opts)
 
         remove_from_tag_if_unused(tag, opts )
@@ -96,7 +96,7 @@ defmodule Tags_Multi_Tenant do
   defp remove_from_tag_if_unused(tag, opts) do
     tag = repo().get_by(Tag, [name: tag], opts)
     if tag do
-      Tags_Multi_TenantQuery.count_tagging_by_tag_id(tag.id)
+      TagsMultiTenantQuery.count_tagging_by_tag_id(tag.id)
       |> repo().one(opts)
       |> case do
         0 -> repo().delete(tag, opts)
@@ -142,7 +142,7 @@ defmodule Tags_Multi_Tenant do
         # context - taggable_type with the new_tag.id
         new_tag = get_or_create(new_tag_name, opts)
 
-        Tags_Multi_TenantQuery.get_tags_association(struct, old_tag, context)
+        TagsMultiTenantQuery.get_tags_association(struct, old_tag, context)
         |> repo().update_all([set: [tag_id: new_tag.id]], opts)
 
         if taggings_by_tag_id(old_tag.id, opts) == 0 do
@@ -153,7 +153,7 @@ defmodule Tags_Multi_Tenant do
 
   #Return the number of entries in Tagging with the tag_id passed as param.
   defp taggings_by_tag_id(tag_id, opts) do
-    Tags_Multi_TenantQuery.count_tagging_by_tag_id(tag_id)
+    TagsMultiTenantQuery.count_tagging_by_tag_id(tag_id)
     |> repo().one(opts)
   end
 
@@ -187,10 +187,10 @@ defmodule Tags_Multi_Tenant do
     id = struct.id
     type = struct.__struct__ |> taggable_type
 
-    Tags_Multi_TenantQuery.search_tags(context, type, id)
+    TagsMultiTenantQuery.search_tags(context, type, id)
   end
   def tag_list_queryable(model, context) do
-    Tags_Multi_TenantQuery.search_tags(context, taggable_type(model))
+    TagsMultiTenantQuery.search_tags(context, taggable_type(model))
   end
 
   @doc """
@@ -223,7 +223,7 @@ defmodule Tags_Multi_Tenant do
     %{from: %{source: {_source, schema}}} = Ecto.Queryable.to_query(queryable)
 
     queryable
-    |> Tags_Multi_TenantQuery.search_tagged_with(tags, context, taggable_type(schema))
+    |> TagsMultiTenantQuery.search_tagged_with(tags, context, taggable_type(schema))
   end
 
   defp taggable_type(module), do: module |> Module.split |> List.last

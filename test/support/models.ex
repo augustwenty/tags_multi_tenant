@@ -1,7 +1,7 @@
-defmodule Tags_Multi_TenantPost do
+defmodule TagsMultiTenantPost do
   use Ecto.Schema
-  use Tags_Multi_Tenant.TagAs, :tags
-  use Tags_Multi_Tenant.TagAs, :categories
+  use TagsMultiTenant.TagAs, :tags
+  use TagsMultiTenant.TagAs, :categories
 
   import Ecto.Changeset
 

@@ -1,4 +1,4 @@
-defmodule Tags_Multi_Tenant.Tagging do
+defmodule TagsMultiTenant.Tagging do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -11,7 +11,7 @@ defmodule Tags_Multi_Tenant.Tagging do
 
     timestamps(updated_at: false)
 
-    belongs_to :tag, Tags_Multi_Tenant.Tag
+    belongs_to :tag, TagsMultiTenant.Tag
   end
 
   def changeset(struct, params \\ %{}) do

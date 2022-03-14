@@ -1,4 +1,4 @@
-defmodule Tags_Multi_Tenant.Repo.Migrations.CreateTag do
+defmodule TagsMultiTenant.Repo.Migrations.CreateTag do
   use Ecto.Migration
 
   def change do

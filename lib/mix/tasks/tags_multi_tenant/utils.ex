@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Tags_Multi_Tenant.Utils do
+defmodule Mix.Tasks.TagsMultiTenant.Utils do
   @moduledoc"""
   Some helper functions for tasks
   """

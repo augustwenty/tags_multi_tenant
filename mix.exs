@@ -1,10 +1,10 @@
-defmodule Tags_Multi_Tenant.Mixfile do
+defmodule TagsMultiTenant.Mixfile do
   use Mix.Project
 
   def project do
     [app: :tags_multi_tenant,
-     name: "Tags_Multi_Tenant",
-     version: "0.1.2",
+     name: "TagsMultiTenant",
+     version: "0.1.3",
      elixir: "~> 1.10",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -13,7 +13,7 @@ defmodule Tags_Multi_Tenant.Mixfile do
      deps: deps(),
      description: description(),
      source_url: "https://github.com/augustwenty/tags_multi_tenant",
-     docs: [main: "Tags_Multi_Tenant", extras: ["README.md"]]
+     docs: [main: "TagsMultiTenant", extras: ["README.md"]]
     ]
   end
 
@@ -55,7 +55,7 @@ defmodule Tags_Multi_Tenant.Mixfile do
 
   defp description do
     """
-    Recreating the Tags_Multi_Tenant project in order to support tagging
+    Recreating the TagsMultiTenant project in order to support tagging
     requirements for my project
     """
   end

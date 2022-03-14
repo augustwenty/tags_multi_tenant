@@ -1,16 +1,16 @@
-defmodule Tags_Multi_Tenant.TagAsTest do
+defmodule TagsMultiTenant.TagAsTest do
   alias Ecto.Adapters.SQL
-  alias Tags_Multi_TenantPost, as: Post
-  alias Tags_Multi_Tenant.{Tagging, Tag}
+  alias TagsMultiTenantPost, as: Post
+  alias TagsMultiTenant.{Tagging, Tag}
 
   import Ecto.Query
 
   use ExUnit.Case
 
-  @repo       Tags_Multi_Tenant.RepoClient.repo
+  @repo       TagsMultiTenant.RepoClient.repo
   @tenant_id  "example_tenant"
 
-  doctest Tags_Multi_Tenant
+  doctest TagsMultiTenant
 
   setup do
     # Regular test
@@ -141,8 +141,8 @@ defmodule Tags_Multi_Tenant.TagAsTest do
   test "using the module allows to search for all created tags for a context" do
     post1 = @repo.insert!(%Post{title: "hello world"})
     post2 = @repo.insert!(%Post{title: "hello world2"})
-    Tags_Multi_Tenant.add(post1, ["tag1", "tag2"])
-    Tags_Multi_Tenant.add(post2, ["tag2", "tag3"])
+    TagsMultiTenant.add(post1, ["tag1", "tag2"])
+    TagsMultiTenant.add(post2, ["tag2", "tag3"])
 
     result = Post.tags
 
@@ -318,8 +318,8 @@ defmodule Tags_Multi_Tenant.TagAsTest do
   test "[multi tenant] using the module allows to search for all created tags for a context" do
     post1 = @repo.insert!(%Post{title: "hello world"}, [prefix: @tenant_id])
     post2 = @repo.insert!(%Post{title: "hello world2"}, [prefix: @tenant_id])
-    Tags_Multi_Tenant.add(post1, ["tag1", "tag2"], [prefix: @tenant_id])
-    Tags_Multi_Tenant.add(post2, ["tag2", "tag3"], [prefix: @tenant_id])
+    TagsMultiTenant.add(post1, ["tag1", "tag2"], [prefix: @tenant_id])
+    TagsMultiTenant.add(post2, ["tag2", "tag3"], [prefix: @tenant_id])
 
     result = Post.tags([prefix: @tenant_id])
 

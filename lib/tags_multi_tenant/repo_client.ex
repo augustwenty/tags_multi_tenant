@@ -1,4 +1,4 @@
-defmodule Tags_Multi_Tenant.RepoClient do
+defmodule TagsMultiTenant.RepoClient do
   @doc """
   Gets the configured repo module or defaults to Repo if none configured
   """

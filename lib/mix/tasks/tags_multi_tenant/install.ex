@@ -1,9 +1,9 @@
-defmodule Mix.Tasks.Tags_Multi_Tenant.Install do
+defmodule Mix.Tasks.TagsMultiTenant.Install do
   @shortdoc "generates tags_multi_tenant migration file for the database"
 
   use Mix.Task
   import Mix.Generator
-  import Mix.Tasks.Tags_Multi_Tenant.Utils, only: [timestamp: 0]
+  import Mix.Tasks.TagsMultiTenant.Utils, only: [timestamp: 0]
 
   def run(_args) do
     path = Path.relative_to("priv/repo/migrations", Mix.Project.app_path)

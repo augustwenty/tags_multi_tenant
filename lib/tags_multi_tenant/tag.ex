@@ -1,11 +1,11 @@
-defmodule Tags_Multi_Tenant.Tag do
+defmodule TagsMultiTenant.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "tags" do
     field :name, :string, null: false
 
-    has_many :taggings, Tags_Multi_Tenant.Tagging
+    has_many :taggings, TagsMultiTenant.Tagging
   end
 
   def changeset(struct, params \\ %{}) do

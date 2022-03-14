@@ -1,11 +1,11 @@
-defmodule Tags_Multi_Tenant.Tags_Multi_TenantQuery do
+defmodule TagsMultiTenant.TagsMultiTenantQuery do
   import Ecto.{Query}
-  alias Tags_Multi_Tenant.{Tagging, Tag}
+  alias TagsMultiTenant.{Tagging, Tag}
 
   @moduledoc """
   Allow to build essential ecto queries for tags_multi_tenant
 
-  All this functions only should be used from Tags_Multi_Tenant module
+  All this functions only should be used from TagsMultiTenant module
   """
 
   @doc """
