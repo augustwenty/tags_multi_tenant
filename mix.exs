@@ -48,8 +48,7 @@ defmodule Tags_Multi_Tenant.Mixfile do
       maintainers: ["ddaugher"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/augustwenty/tags_multi_tenant",
-        "Docs" => "https://hexdocs.pm/tags_multi_tenant/TagsMultiTenant.html"
+        "GitHub" => "https://github.com/augustwenty/tags_multi_tenant"
       }
     ]
   end
