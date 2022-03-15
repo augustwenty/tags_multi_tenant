@@ -37,12 +37,12 @@ It also allows you to specify various contexts
   mix TagsMultiTenant.install
   ```
   
-  This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are
+  This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are:
 	
-	* you are not using a multi-tenant database
-  	* you are using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
+	* not using a multi-tenant database
+	* using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
 
-  If you prefer to use the multi-tenant features, you will need to move the two migration files to the ```tenant_migrations``` directory prior to running the ```mix ecto.migrate```
+  If you prefer to use the multi-tenant features, you will need to move the two migration files to the ```tenant_migrations``` directory prior to applying the migrations.
 
   5. Run the migrations:
 
