@@ -38,6 +38,7 @@ It also allows you to specify various contexts
   ```
   
   This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are
+	
 	* you are not using a multi-tenant database
   	* you are using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
 
