@@ -1,7 +1,5 @@
 # TagsMultiTenant
 
-[![CircleCI](https://circleci.com/gh/bizneo/tags_multi_tenant/tree/master.svg?style=svg)](https://circleci.com/gh/bizneo/tags_multi_tenant/tree/master)
-
 TagsMultiTenant allows you to manage tags associated to your records.
 
 It also allows you to specify various contexts
@@ -12,7 +10,7 @@ It also allows you to specify various contexts
 
   ```elixir
   def deps do
-    [{:tags_multi_tenant, "~> 0.6.0"}]
+    [{:tags_multi_tenant, "~> 0.1.4"}]
   end
   ```
 
@@ -29,15 +27,34 @@ It also allows you to specify various contexts
 
   3. Install your dependencies:
 
-  ```mix deps.get```
+  ```
+  mix deps.get
+  ```
 
   4. Generate the migrations:
 
-  ```mix tags_multi_tenant.install```
+  ```
+  mix TagsMultiTenant.install
+  ```
+  
+  This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are
+	* you are not using a multi-tenant database
+  	* you are using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
+
+  If you prefer to use the multi-tenant features, you will need to move the two migration files to the ```tenant_migrations``` directory prior to running the ```mix ecto.migrate```
 
   5. Run the migrations:
 
-  ```mix ecto.migrate```
+  ```
+  mix ecto.migrate
+  ```
+  
+  If you are using the Triplex package to manage multi-tenant migrations, you can use 
+  
+  ```
+  mix triplex.migrate
+  ``` 
+  to migrate these migrations.
 
 ## Include it in your models
 
