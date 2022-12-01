@@ -7,9 +7,9 @@ defmodule TagsMultiTenant.Tagging do
                       else: :integer
 
   schema "taggings" do
-    field(:taggable_id, @taggable_id_type, null: false)
-    field(:taggable_type, :string, null: false)
-    field(:context, :string, null: false)
+    field(:taggable_id, @taggable_id_type)
+    field(:taggable_type, :string)
+    field(:context, :string)
 
     timestamps(updated_at: false)
 

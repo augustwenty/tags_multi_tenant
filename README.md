@@ -10,7 +10,7 @@ It also allows you to specify various contexts
 
   ```elixir
   def deps do
-    [{:tags_multi_tenant, "~> 0.1.5"}]
+    [{:tags_multi_tenant, "~> 0.1.6"}]
   end
   ```
 
@@ -36,9 +36,9 @@ It also allows you to specify various contexts
   ```
   mix TagsMultiTenant.install
   ```
-  
+
   This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are:
-	
+
 	* not using a multi-tenant database
 	* using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
 
@@ -49,12 +49,12 @@ It also allows you to specify various contexts
   ```
   mix ecto.migrate
   ```
-  
-  If you are using the Triplex package to manage multi-tenant migrations, you can use 
-  
+
+  If you are using the Triplex package to manage multi-tenant migrations, you can use
+
   ```
   mix triplex.migrate
-  ``` 
+  ```
   to migrate these migrations.
 
 ## Include it in your models
