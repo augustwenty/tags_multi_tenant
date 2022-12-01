@@ -3,7 +3,7 @@ defmodule TagsMultiTenant.Tag do
   import Ecto.Changeset
 
   schema "tags" do
-    field :name, :string, null: false
+    field :name, :string
 
     has_many :taggings, TagsMultiTenant.Tagging
   end
