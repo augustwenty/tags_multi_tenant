@@ -15,7 +15,7 @@ defmodule TagsMultiTenant do
   @type tag       :: String.t
   @type context   :: String.t
   @type tag_list  :: list
-  @type opts      :: list
+  @type opts      :: Keyword.t
 
   @doc """
   Get a persisted struct and inserts a new tag associated to this
