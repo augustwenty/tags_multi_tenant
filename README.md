@@ -10,7 +10,7 @@ It also allows you to specify various contexts
 
   ```elixir
   def deps do
-    [{:tags_multi_tenant, "~> 0.1.6"}]
+    [{:tags_multi_tenant, "~> 0.1.8"}]
   end
   ```
 
@@ -22,7 +22,7 @@ It also allows you to specify various contexts
 
   config :tags_multi_tenant,
     repo: ApplicationName.Repo,
-    taggable_id: :uuid
+    taggable_id: :integer
   ```
 
   3. Install your dependencies:
@@ -37,7 +37,7 @@ It also allows you to specify various contexts
   mix TagsMultiTenant.install
   ```
 
-  This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave    these in the repo/migrations directory if you are:
+  This will create two migration files, xxxxx\_create\_tag.exs and xxxxx\_create\_tagging.exs.  You can leave these in the repo/migrations directory if you are:
 
 	* not using a multi-tenant database
 	* using a multi-tenant database, but prefer to leave the tagging in the 'public' schema
@@ -70,7 +70,6 @@ i.e.:
   ```elixir
   defmodule Post do
     use Ecto.Schema
-    use TagsMultiTenant.TagAs, :tags
     use TagsMultiTenant.TagAs, :categories
 
     import Ecto.Changeset
@@ -89,49 +88,45 @@ i.e.:
     end
   end
   ```
-As you can see, we have included two different contexts, tags and
-categories
+As you can see, we have included the context categories
 
 Now we can use a set of metaprogrammed functions:
 
-`Post.add_category(struct, tag)` - Passing a persisted struct will
-allow you to associate a new tag
+If you are using the plugin as a single tenant setup, the following functions will work.
 
-`Post.add_categories(struct, tags)` - Passing a persisted struct will
-allow you to associate a new list of tags
+`Post.add_category(struct, tag)` - Passing a persisted struct will allow you to associate a new tag
 
-`Post.add_category(tag)` - Add a Tag without associate it to a persisted struct,
-this allow you have tags availables in the context. Example using `Post.categories`
+`Post.add_categories(struct, tags)` - Passing a persisted struct will allow you to associate a new list of tags
 
-`Post.remove_category(struct, tag)` - Will allow you to remove the relation `struct - tag`,
-but the tag will persist.
+`Post.add_category(tag)` - Add a Tag without associate it to a persisted struct, this allow you have tags availables in the context. Example using `Post.categories`
+
+`Post.remove_category(struct, tag)` - Will allow you to remove the relation `struct - tag`, but the tag will persist.
 
 `Post.remove_category(tag)` - Will allow you to remove a tag in the context `Post - category`. Tag and relations with Post will be deleted.
 
 `Post.rename_category(old_tag, new_tag)` - Will allow you to rename the tag name.
 
-`Post.categories_list(struct)` - List all associated tags with the given
-struct
+`Post.categories_list(struct)` - List all associated tags with the given struct
 
 `Post.categories` - List all associated tags with the module
 
 `Post.categories_queryable` - Same as `Post.categories` but it returns a `queryable` instead of a list.
 
-`Post.tagged_with_category(tag)` - Search for all resources tagged with
-the given tag
+`Post.tagged_with_category(tag)` - Search for all resources tagged with the given tag
 
-`Post.tagged_with_categories(tags)` - Search for all resources tagged
-with the given list tag
+`Post.tagged_with_categories(tags)` - Search for all resources tagged with the given list tag
 
-`Post.tagged_with_query_category(queryable, tags)` - Allow to
-concatenate ecto queries and return the query.
+`Post.tagged_with_query_category(queryable, tags)` - Allow to concatenate ecto queries and return the query.
 
 `Post.tagged_with_query_categories(queryable, tags)` - Same than previous function but allow to receive a list of tags
 
+If you are using the plugin in a multi-tenant environment, then each function accepts 'opts' in order to pass the 'prefix' value to the database. Here is an example of passing tenant value as prefix.
+
+`Post.add_category(struct, tag, prefix: 'client_test')` - Passing a persisted struct will allow you to associate a new tag
 
 ## Working with functions
 
-If you want you can use directly a set of functions to play with tags:
+If you want you can use directly:
 
 [`TagsMultiTenant.add/4`](https://hexdocs.pm/tags_multi_tenant/TagsMultiTenant.html#add/4)
 
