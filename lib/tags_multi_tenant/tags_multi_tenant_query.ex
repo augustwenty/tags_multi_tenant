@@ -47,7 +47,7 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
     tags_length = length(tags)
 
     query
-    |> join_taggings_from_model(context, taggable_type)
+    |> join_taggings_from_tag(context, taggable_type, nil)
     |> join_tags
     |> where([m, tg, t], t.name in ^tags)
     |> group_by([m, tg, t], m.id)
