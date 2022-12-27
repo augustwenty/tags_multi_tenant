@@ -102,13 +102,15 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
   end
 
   defp join_taggings_from_model(query, context, taggable_type) do
-    query
-    |> join(:inner, [m, t], tg in Tagging,
-      on:
-        tg.taggable_type == ^taggable_type and
-          tg.context == ^context and
-          t.id == tg.taggable_id
-    )
+    if has_named_binding?(query, :taggings) do
+      query
+    else
+      query
+      |> join(:inner, [m], t in Tagging,
+        as: :taggings,
+        on: t.taggable_type == ^taggable_type and t.context == ^context and m.id == t.taggable_id
+      )
+    end
   end
 
   defp join_tags(query) do
