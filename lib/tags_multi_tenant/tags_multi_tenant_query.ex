@@ -52,7 +52,6 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
 
     query
     |> join_taggings_from_model(context, taggable_type)
-    |> IO.inspect()
     |> join_tags
     |> IO.inspect()
     |> where([tags: tags], tags.name in ^tags)
