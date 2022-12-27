@@ -4,7 +4,7 @@ defmodule TagsMultiTenant.Mixfile do
   def project do
     [app: :tags_multi_tenant,
      name: "TagsMultiTenant",
-     version: "0.1.11",
+     version: "0.1.12",
      elixir: "~> 1.10",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
