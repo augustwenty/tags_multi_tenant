@@ -10,12 +10,12 @@ defmodule TagsMultiTenant do
   package.
   """
 
-  @type taggable  :: module | struct
-  @type tags      :: String.t | list
-  @type tag       :: String.t
-  @type context   :: String.t
-  @type tag_list  :: list
-  @type opts      :: Keyword.t
+  @type taggable :: module | struct
+  @type tags :: String.t() | list
+  @type tag :: String.t()
+  @type context :: String.t()
+  @type tag_list :: list
+  @type opts :: Keyword.t()
 
   @doc """
   Get a persisted struct and inserts a new tag associated to this
@@ -30,8 +30,13 @@ defmodule TagsMultiTenant do
   @spec add(struct, tags, context, opts) :: struct
   def add(struct, tags, context \\ "tags", opts \\ [])
   def add(struct, nil, _context, _opts), do: struct
-  def add(struct, tag, context, opts) when is_bitstring(tag), do: add(struct, [tag], context, opts)
-  def add(struct, tags, context, _opts) when is_list(context), do: add(struct, tags, "tags", context)
+
+  def add(struct, tag, context, opts) when is_bitstring(tag),
+    do: add(struct, [tag], context, opts)
+
+  def add(struct, tags, context, _opts) when is_list(context),
+    do: add(struct, tags, "tags", context)
+
   def add(struct, tags, context, opts) when is_bitstring(context) do
     tag_list = tag_list(struct, context, opts)
     new_tags = tags -- tag_list
@@ -40,10 +45,12 @@ defmodule TagsMultiTenant do
   end
 
   defp add_new_tags(struct, context, [], tag_list, _opts), do: put_tags(struct, context, tag_list)
+
   defp add_new_tags(struct, context, new_tags, tag_list, opts) do
-    taggings = Enum.map(new_tags, fn(tag) ->
-      generate_tagging(struct, tag, context, opts)
-    end)
+    taggings =
+      Enum.map(new_tags, fn tag ->
+        generate_tagging(struct, tag, context, opts)
+      end)
 
     repo().insert_all(Tagging, taggings, opts)
 
@@ -58,7 +65,7 @@ defmodule TagsMultiTenant do
       taggable_type: struct.__struct__ |> taggable_type,
       context: context,
       tag_id: tag_resource.id,
-      inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now, :second)
+      inserted_at: NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
     }
   end
 
@@ -73,7 +80,10 @@ defmodule TagsMultiTenant do
   """
   @spec remove(struct, tag, context, opts) :: struct
   def remove(struct, tag, context \\ "tags", opts \\ [])
-  def remove(struct, tag, context, opts) when is_list(context), do: remove(struct, tag, "tags", opts)
+
+  def remove(struct, tag, context, opts) when is_list(context),
+    do: remove(struct, tag, "tags", opts)
+
   def remove(struct, tag, context, opts) do
     tag_list = tag_list(struct, context, opts)
 
@@ -83,18 +93,20 @@ defmodule TagsMultiTenant do
         |> TagsMultiTenantQuery.get_tags_association(get_or_create(tag, opts), context)
         |> repo().delete_all(opts)
 
-        remove_from_tag_if_unused(tag, opts )
+        remove_from_tag_if_unused(tag, opts)
         put_tags(struct, context, List.delete(tag_list, tag))
+
       false ->
         put_tags(struct, context, tag_list)
     end
-
   end
 
   # Remove tag from Tag table if it's unused
   defp remove_from_tag_if_unused(nil, _opts), do: nil
+
   defp remove_from_tag_if_unused(tag, opts) do
     tag = repo().get_by(Tag, [name: tag], opts)
+
     if tag do
       TagsMultiTenantQuery.count_tagging_by_tag_id(tag.id)
       |> repo().one(opts)
@@ -133,12 +145,13 @@ defmodule TagsMultiTenant do
   defp rename_tag(struct, old_tag, new_tag_name, context, opts) do
     case taggings_by_tag_id(old_tag.id, opts) do
       0 ->
-        #If the old tag is NOT in Tagging we have only to rename its `name`
-        #in Tag table.
+        # If the old tag is NOT in Tagging we have only to rename its `name`
+        # in Tag table.
         Tag.changeset(old_tag, %{name: new_tag_name})
         |> repo().update(opts)
+
       _ ->
-        #In this case we have to get or create a new Tag, and uptade all relations
+        # In this case we have to get or create a new Tag, and uptade all relations
         # context - taggable_type with the new_tag.id
         new_tag = get_or_create(new_tag_name, opts)
 
@@ -151,7 +164,7 @@ defmodule TagsMultiTenant do
     end
   end
 
-  #Return the number of entries in Tagging with the tag_id passed as param.
+  # Return the number of entries in Tagging with the tag_id passed as param.
   defp taggings_by_tag_id(tag_id, opts) do
     TagsMultiTenantQuery.count_tagging_by_tag_id(tag_id)
     |> repo().one(opts)
@@ -181,14 +194,16 @@ defmodule TagsMultiTenant do
   - With a struct: it returns the list of tags associated to that struct and context.
   - With a module: it returns all the tags associated to one module and context.
   """
-  @spec tag_list_queryable(taggable, context) :: Ecto.Queryable.t
+  @spec tag_list_queryable(taggable, context) :: Ecto.Queryable.t()
   def tag_list_queryable(taggable, context \\ "tags")
+
   def tag_list_queryable(struct, context) when is_map(struct) do
     id = struct.id
     type = struct.__struct__ |> taggable_type
 
     TagsMultiTenantQuery.search_tags(context, type, id)
   end
+
   def tag_list_queryable(model, context) do
     TagsMultiTenantQuery.search_tags(context, taggable_type(model))
   end
@@ -201,8 +216,13 @@ defmodule TagsMultiTenant do
   """
   @spec tagged_with(tags, module, context, opts) :: list
   def tagged_with(tags, model, context \\ "tags", opts \\ [])
-  def tagged_with(tag, model, context, opts) when is_bitstring(tag), do: tagged_with([tag], model, context, opts)
-  def tagged_with(tag, model, context, _opts) when is_list(context), do: tagged_with(tag, model, "tags", context)
+
+  def tagged_with(tag, model, context, opts) when is_bitstring(tag),
+    do: tagged_with([tag], model, context, opts)
+
+  def tagged_with(tag, model, context, _opts) when is_list(context),
+    do: tagged_with(tag, model, "tags", context)
+
   def tagged_with(tags, model, context, opts) do
     do_tags_search(model, tags, context) |> repo().all(opts)
   end
@@ -214,7 +234,10 @@ defmodule TagsMultiTenant do
   or perform actions like paginate the results.
   """
   def tagged_with_query(query, tags, context \\ "tags")
-  def tagged_with_query(query, tag, context) when is_bitstring(tag), do: tagged_with_query(query, [tag], context)
+
+  def tagged_with_query(query, tag, context) when is_bitstring(tag),
+    do: tagged_with_query(query, [tag], context)
+
   def tagged_with_query(query, tags, context) do
     do_tags_search(query, tags, context)
   end
@@ -226,5 +249,5 @@ defmodule TagsMultiTenant do
     |> TagsMultiTenantQuery.search_tagged_with(tags, context, taggable_type(schema))
   end
 
-  defp taggable_type(module), do: module |> Module.split |> List.last
+  defp taggable_type(module), do: module |> Module.split() |> List.last()
 end
