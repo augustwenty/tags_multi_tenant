@@ -38,3 +38,4 @@ npm-debug.log
 yarn.lock
 MnesiaCore.nonode*
 Mnesia.nonode*
+.DS_Store
