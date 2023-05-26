@@ -3,14 +3,15 @@ defmodule TagsMultiTenant.Tag do
   import Ecto.Changeset
 
   schema "tags" do
-    field :name, :string
+    field(:name, :string)
 
-    has_many :taggings, TagsMultiTenant.Tagging
+    has_many(:taggings, TagsMultiTenant.Tagging)
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name])
+    |> unique_constraint(:unique_tag_name, name: :tags_name_key)
     |> validate_required(:name)
   end
 end
