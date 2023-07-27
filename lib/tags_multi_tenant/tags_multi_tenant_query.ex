@@ -43,19 +43,33 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
     )
   end
 
+  defp build_where(query, tags = [_head | _tail = []]) do
+    Enum.reduce(tags, query, fn value, query ->
+      query |> where([tags: tags], tags.name == ^value)
+    end)
+  end
+
+  defp build_where(query, [head | tail]) do
+    query = query |> build_where([head])
+
+    Enum.reduce(tail, query, fn value, query ->
+      query
+      |> or_where([tags: tags], tags.name == ^value)
+    end)
+  end
+
   @doc """
   Build the query to search tagged resources
   """
   def search_tagged_with(query, tags, context, taggable_type) do
-    IO.inspect("------------------------")
     tags_length = length(tags)
 
     query
     |> join_taggings_from_model(context, taggable_type)
     |> join_tags
-    |> IO.inspect()
-    |> where([tags: tags], tags.name in ^tags)
-    |> IO.inspect()
+    # |> where([tags: tags], tags.name in ^tags)
+    |> build_where(tags)
+    # |> IO.inspect()
     |> group_by([m], m.id)
     |> having([taggings: taggings], count(taggings.taggable_id) == ^tags_length)
     |> order_by([m], asc: m.inserted_at)
