@@ -217,13 +217,18 @@ defmodule TagsMultiTenant do
   @spec tagged_with(tags, module, context, opts) :: list
   def tagged_with(tags, model, context \\ "tags", opts \\ [])
 
-  def tagged_with(tag, model, context, opts) when is_bitstring(tag),
-    do: tagged_with([tag], model, context, opts)
+  def tagged_with(tag, model, context, opts) when is_bitstring(tag) do
+    tagged_with([tag], model, context, opts)
+  end
 
-  def tagged_with(tag, model, context, _opts) when is_list(context),
-    do: tagged_with(tag, model, "tags", context)
+  def tagged_with(tag, model, context, _opts) when is_list(context) do
+    tagged_with(tag, model, "tags", context)
+  end
 
   def tagged_with(tags, model, context, opts) do
+    IO.inspect("TAGGED")
+    IO.inspect(tags)
+    IO.inspect(model)
     do_tags_search(model, tags, context) |> repo().all(opts)
   end
 
@@ -235,14 +240,20 @@ defmodule TagsMultiTenant do
   """
   def tagged_with_query(query, tags, context \\ "tags")
 
-  def tagged_with_query(query, tag, context) when is_bitstring(tag),
-    do: tagged_with_query(query, [tag], context)
+  def tagged_with_query(query, tag, context) when is_bitstring(tag) do
+    IO.inspect("1")
+    tagged_with_query(query, [tag], context)
+  end
 
   def tagged_with_query(query, tags, context) do
+    IO.inspect("2")
     do_tags_search(query, tags, context)
   end
 
   defp do_tags_search(queryable, tags, context) do
+    IO.inspect(queryable)
+    IO.inspect(tags)
+    IO.inspect(context)
     %{from: %{source: {_source, schema}}} = Ecto.Queryable.to_query(queryable)
 
     queryable

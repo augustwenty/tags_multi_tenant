@@ -1,5 +1,6 @@
 defmodule TagsMultiTenant.TagsMultiTenantQuery do
   import Ecto.{Query}
+  alias Makeup.Styles.HTML.IgorStyle
   alias TagsMultiTenant.{Tagging, Tag}
 
   @moduledoc """
@@ -43,37 +44,139 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
     )
   end
 
-  defp build_where(query, tags = [_head | _tail = []]) do
-    Enum.reduce(tags, query, fn value, query ->
-      query |> where([tags: tags], tags.name == ^value)
+  @tag_format ~r/^(begins|ends|contains|equals):(\w+)$/
+
+  defp split_action_value(tag = [_head | _tail = []]) do
+    with tag when not is_nil(tag) <- Regex.run(@tag_format, Enum.at(tag, 0, []), capture: :first) do
+      split = String.split(Enum.at(tag, 0, []), ":", trim: true)
+      action = Enum.at(split, 0, nil)
+      value = Enum.at(split, 1, nil)
+
+      {:ok, action, value}
+    else
+      _ ->
+        {:error, "incorrect format passed"}
+    end
+  end
+
+  defp create_where(action, value)
+
+  defp create_where("begins", value) when byte_size(value) > 0 do
+    like = "#{value}%"
+    dynamic([tags: tags], ilike(tags.name, ^like))
+  end
+
+  defp create_where("ends", value) when byte_size(value) > 0 do
+    like = "%#{value}"
+    dynamic([tags: tags], ilike(tags.name, ^like))
+  end
+
+  defp create_where("contains", value) when byte_size(value) > 0 do
+    like = "%#{value}%"
+    dynamic([tags: tags], ilike(tags.name, ^like))
+  end
+
+  defp create_where("equals", value) when byte_size(value) > 0 do
+    IO.inspect("HERE")
+    dynamic([tags: tags], tags.name == ^value)
+  end
+
+  defp create_where(_, _) do
+    true
+  end
+
+  defp build_single(tag = [_head | _tail = []]) do
+    with {:ok, action, value} <- split_action_value(tag) do
+      create_where(action, value)
+    else
+      {:error, message} ->
+        IO.inspect(message)
+        true
+
+      _ ->
+        true
+    end
+  end
+
+  defp build_where([head | tail]) do
+    condition1 = build_single([head])
+
+    Enum.reduce(tail, condition1, fn tag, conditions ->
+      build_or_where([tag], conditions)
     end)
   end
 
-  defp build_where(query, [head | tail]) do
-    query = query |> build_where([head])
+  defp create_or_where(action, value, conditions)
 
-    Enum.reduce(tail, query, fn value, query ->
-      query
-      |> or_where([tags: tags], tags.name == ^value)
-    end)
+  defp create_or_where("begins", value, conditions) when byte_size(value) > 0 do
+    IO.inspect("1")
+    like = "#{value}%"
+    dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
+  end
+
+  defp create_or_where("ends", value, conditions) when byte_size(value) > 0 do
+    IO.inspect("2")
+    like = "%#{value}"
+    dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
+  end
+
+  defp create_or_where("contains", value, conditions) when byte_size(value) > 0 do
+    IO.inspect("3")
+    like = "%#{value}%"
+    dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
+  end
+
+  defp create_or_where("equals", value, conditions) when byte_size(value) > 0 do
+    IO.inspect("4")
+    dynamic([tags: tags], ^conditions or tags.name == ^value)
+  end
+
+  defp create_or_where(_, _, _) do
+    IO.inspect("5")
+    true
+  end
+
+  defp build_or_where(tag = [_head | _tail = []], conditions) do
+    with {:ok, action, value} <- split_action_value(tag) do
+      IO.inspect("INSIDE")
+      IO.inspect(action)
+      IO.inspect(value)
+      create_or_where(action, value, conditions)
+    else
+      {:error, message} ->
+        IO.inspect("ERROR1")
+        IO.inspect(message)
+        conditions
+
+      _ ->
+        IO.inspect("ERROR2")
+        conditions
+    end
   end
 
   @doc """
   Build the query to search tagged resources
   """
   def search_tagged_with(query, tags, context, taggable_type) do
-    tags_length = length(tags)
+    # tags_length = length(tags)
+
+    conditions = build_where(tags)
+
+    IO.inspect("SEARCH")
+
+    IO.inspect(conditions)
 
     query
     |> join_taggings_from_model(context, taggable_type)
     |> join_tags
     # |> where([tags: tags], tags.name in ^tags)
-    |> build_where(tags)
-    # |> IO.inspect()
+    # |> build_where(tags)
+    |> where(^conditions)
     |> group_by([m], m.id)
-    |> having([taggings: taggings], count(taggings.taggable_id) == ^tags_length)
+    # |> having([taggings: taggings], count(taggings.taggable_id) <= ^tags_length)
     |> order_by([m], asc: m.inserted_at)
     |> select([m], m)
+    |> IO.inspect()
   end
 
   @doc """

@@ -2,18 +2,19 @@ defmodule TagsMultiTenant.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :tags_multi_tenant,
-     name: "TagsMultiTenant",
-     version: "0.1.15",
-     elixir: "~> 1.10",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     elixirc_paths: elixirc_paths(Mix.env),
-     package: package(),
-     deps: deps(),
-     description: description(),
-     source_url: "https://github.com/augustwenty/tags_multi_tenant",
-     docs: [main: "TagsMultiTenant", extras: ["README.md"]]
+    [
+      app: :tags_multi_tenant,
+      name: "TagsMultiTenant",
+      version: "0.1.16",
+      elixir: "~> 1.10",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      package: package(),
+      deps: deps(),
+      description: description(),
+      source_url: "https://github.com/augustwenty/tags_multi_tenant",
+      docs: [main: "TagsMultiTenant", extras: ["README.md"]]
     ]
   end
 
@@ -39,7 +40,7 @@ defmodule TagsMultiTenant.Mixfile do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.16.2"},
       {:inflex, "~> 1.8.1"},
-      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.14", only: :dev, runtime: false}
     ]
   end
 

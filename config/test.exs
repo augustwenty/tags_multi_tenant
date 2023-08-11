@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :logger, level: :info
+config :logger, level: :debug
 
 config :tags_multi_tenant, ecto_repos: [TagsMultiTenant.Repo]
 

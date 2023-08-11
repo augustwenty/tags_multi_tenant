@@ -10,7 +10,7 @@ It also allows you to specify various contexts
 
   ```elixir
   def deps do
-    [{:tags_multi_tenant, "~> 0.1.8"}]
+    [{:tags_multi_tenant, "~> 0.1.16"}]
   end
   ```
 
