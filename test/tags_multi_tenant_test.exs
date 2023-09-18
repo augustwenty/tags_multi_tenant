@@ -186,6 +186,20 @@ defmodule TagsMultiTenantTest do
     assert Enum.sort(result) == Enum.sort([post1, post2, post3])
   end
 
+  test "should return filtered posts, begins action, including dash" do
+    post1 = @repo.insert!(%Post{title: "hello world1"})
+    post2 = @repo.insert!(%Post{title: "hello world2"})
+    post3 = @repo.insert!(%Post{title: "hello world3"})
+    TagsMultiTenant.add(post1, "dash-dash")
+    TagsMultiTenant.add(post2, "tagged1")
+    TagsMultiTenant.add(post3, "tagged2")
+
+    result = TagsMultiTenant.tagged_with("begins:dash-dash", Post)
+
+    assert Enum.count(result) == 1
+    assert Enum.sort(result) == Enum.sort([post1])
+  end
+
   test "should return all posts, ignoring invalid tag, ends action" do
     post1 = @repo.insert!(%Post{title: "hello world1"})
     post2 = @repo.insert!(%Post{title: "hello world2"})

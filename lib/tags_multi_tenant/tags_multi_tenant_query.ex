@@ -44,7 +44,7 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
     )
   end
 
-  @tag_format ~r/^(begins|ends|contains|equals):(\w+)$/
+  @tag_format ~r/^(begins|ends|contains|equals):(.*)$/
 
   defp split_action_value(tag = [_head | _tail = []]) do
     with tag when not is_nil(tag) <- Regex.run(@tag_format, Enum.at(tag, 0, []), capture: :first) do
@@ -77,7 +77,6 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
   end
 
   defp create_where("equals", value) when byte_size(value) > 0 do
-    IO.inspect("HERE")
     dynamic([tags: tags], tags.name == ^value)
   end
 
@@ -90,7 +89,6 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
       create_where(action, value)
     else
       {:error, message} ->
-        IO.inspect(message)
         true
 
       _ ->
@@ -109,47 +107,36 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
   defp create_or_where(action, value, conditions)
 
   defp create_or_where("begins", value, conditions) when byte_size(value) > 0 do
-    IO.inspect("1")
     like = "#{value}%"
     dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
   end
 
   defp create_or_where("ends", value, conditions) when byte_size(value) > 0 do
-    IO.inspect("2")
     like = "%#{value}"
     dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
   end
 
   defp create_or_where("contains", value, conditions) when byte_size(value) > 0 do
-    IO.inspect("3")
     like = "%#{value}%"
     dynamic([tags: tags], ^conditions or ilike(tags.name, ^like))
   end
 
   defp create_or_where("equals", value, conditions) when byte_size(value) > 0 do
-    IO.inspect("4")
     dynamic([tags: tags], ^conditions or tags.name == ^value)
   end
 
   defp create_or_where(_, _, _) do
-    IO.inspect("5")
     true
   end
 
   defp build_or_where(tag = [_head | _tail = []], conditions) do
     with {:ok, action, value} <- split_action_value(tag) do
-      IO.inspect("INSIDE")
-      IO.inspect(action)
-      IO.inspect(value)
       create_or_where(action, value, conditions)
     else
       {:error, message} ->
-        IO.inspect("ERROR1")
-        IO.inspect(message)
         conditions
 
       _ ->
-        IO.inspect("ERROR2")
         conditions
     end
   end
@@ -162,10 +149,6 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
 
     conditions = build_where(tags)
 
-    IO.inspect("SEARCH")
-
-    IO.inspect(conditions)
-
     query
     |> join_taggings_from_model(context, taggable_type)
     |> join_tags
@@ -176,7 +159,6 @@ defmodule TagsMultiTenant.TagsMultiTenantQuery do
     # |> having([taggings: taggings], count(taggings.taggable_id) <= ^tags_length)
     |> order_by([m], asc: m.inserted_at)
     |> select([m], m)
-    |> IO.inspect()
   end
 
   @doc """
