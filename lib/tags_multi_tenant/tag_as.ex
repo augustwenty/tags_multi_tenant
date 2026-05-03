@@ -78,49 +78,45 @@ defmodule TagsMultiTenant.TagAs do
     end
   end
 
-  defmacro __before_compile__(_env) do
-    quote do
-      @contexts
-      |> Enum.each(fn context ->
-        singularized_context = Inflex.singularize(context)
+  defmacro __before_compile__(env) do
+    contexts = Module.get_attribute(env.module, :contexts) || []
 
-        Module.eval_quoted(
-          __MODULE__,
-          quote do
-            def unquote(:"add_#{context}")(tags) do
-              TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), [])
-            end
+    for context <- contexts do
+      singularized_context = Inflex.singularize(context)
 
-            def unquote(:"add_#{context}")(tags, opts) do
-              TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), opts)
-            end
+      quote do
+        def unquote(:"add_#{context}")(tags) do
+          TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), [])
+        end
 
-            def unquote(:"add_#{singularized_context}")(tags) do
-              TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), [])
-            end
+        def unquote(:"add_#{context}")(tags, opts) do
+          TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), opts)
+        end
 
-            def unquote(:"add_#{singularized_context}")(tags, opts) do
-              TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), opts)
-            end
+        def unquote(:"add_#{singularized_context}")(tags) do
+          TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), [])
+        end
 
-            def unquote(:"remove_#{singularized_context}")(tag) do
-              TagsMultiTenant.remove(%__MODULE__{}, tag, unquote(context), [])
-            end
+        def unquote(:"add_#{singularized_context}")(tags, opts) do
+          TagsMultiTenant.add(%__MODULE__{}, tags, unquote(context), opts)
+        end
 
-            def unquote(:"remove_#{singularized_context}")(tag, opts) do
-              TagsMultiTenant.remove(%__MODULE__{}, tag, unquote(context), opts)
-            end
+        def unquote(:"remove_#{singularized_context}")(tag) do
+          TagsMultiTenant.remove(%__MODULE__{}, tag, unquote(context), [])
+        end
 
-            def unquote(:"rename_#{singularized_context}")(old_tag, new_tag) do
-              TagsMultiTenant.rename(%__MODULE__{}, old_tag, new_tag, unquote(context), [])
-            end
+        def unquote(:"remove_#{singularized_context}")(tag, opts) do
+          TagsMultiTenant.remove(%__MODULE__{}, tag, unquote(context), opts)
+        end
 
-            def unquote(:"rename_#{singularized_context}")(old_tag, new_tag, opts) do
-              TagsMultiTenant.rename(%__MODULE__{}, old_tag, new_tag, unquote(context), opts)
-            end
-          end
-        )
-      end)
+        def unquote(:"rename_#{singularized_context}")(old_tag, new_tag) do
+          TagsMultiTenant.rename(%__MODULE__{}, old_tag, new_tag, unquote(context), [])
+        end
+
+        def unquote(:"rename_#{singularized_context}")(old_tag, new_tag, opts) do
+          TagsMultiTenant.rename(%__MODULE__{}, old_tag, new_tag, unquote(context), opts)
+        end
+      end
     end
   end
 end
